@@ -1,0 +1,99 @@
+# Brief analysis of the ToothGrowth dataset in R #  
+### Author: D.Aiazzi ###  
+## Overview ##  
+For the second part of the course work of the Statistical Inference course, we're going to analyze the ToothGrowth data in the R datasets package. These are the project instructions: 
+
+    1. Load the ToothGrowth data and perform some basic exploratory data analyses 
+    2. Provide a basic summary of the data.
+    3. Use confidence intervals and/or hypothesis tests to compare tooth growth by supp and dose. 
+    
+## Exploratory analyses ##
+
+The ToothGrowth dataset the response in the length of odontoblasts (teeth) in each of 10 guinea pigs at each of three dose levels of Vitamin C (0.5, 1, and 2 mg) with each of two delivery methods (orange juice or ascorbic acid). 
+The data frame is composed of 60 observations on 3 variables:  
+- len: 	numeric 	Tooth length  
+- supp: 	factor 	Supplement type (VC for abosrbis acid, OJ for orange juice)  
+- dose: 	numeric 	Dose in milligrams     
+
+```{r Exploratory analyses, echo=FALSE}
+data(ToothGrowth)
+df <- ToothGrowth
+rm(ToothGrowth)
+df$dose <- as.factor(df$dose)
+head(df)
+str(df)
+```
+
+A quick summary shows that the measured length goes from a minimum of 4.2 to a maximum of 33.9, with an 18.81 and median 19.25.    
+
+```{r, echo=FALSE}
+summary(df$len)
+```
+
+The following graphs show the measured length divided by delivery methods and by dose. 
+
+```{r, echo=FALSE}
+library(ggplot2)
+ggplot(df, aes(dose, len)) + 
+    geom_boxplot(aes(fill = dose)) +
+    facet_grid(supp ~ .) +
+    ggtitle("Tooth growth in guinea pigs\nby dose and by delivery method of vitamin C") +
+    coord_flip()
+
+ggplot(df, aes(x = len)) +
+    geom_histogram(aes(fill = dose), binwidth = 1) +
+    facet_grid(supp ~ dose)
+```
+
+From the first graphs, it seems that there is a positive correlation between the dose and the length. It also seems that OJ permforms better overall, although with higher variance for dose 0.5 and 1.
+
+## Hypothesis test ##   
+
+```{r Set data and variables for the test, echo=FALSE}
+OJ0.5 <- df[df$supp == "OJ" & df$dose == 0.5, 1]
+OJ1.0 <- df[df$supp == "OJ" & df$dose == 1, 1]
+OJ2.0 <- df[df$supp == "OJ" & df$dose == 2, 1]
+VC0.5 <- df[df$supp == "VC" & df$dose == 0.5, 1]
+VC1.0 <- df[df$supp == "VC" & df$dose == 1, 1]
+VC2.0 <- df[df$supp == "VC" & df$dose == 2, 1]
+
+var.equal <- FALSE
+conf.level <- .95
+```
+
+We want to first understand if the difference in tooth growth is explained by higher levels of vitamin C delivered. We set our null hypothesis that a lower supply gives the same length of a higher one and we test separately the two methods. 
+
+```{r Compare doses, echo=FALSE}
+t.test(OJ1.0-OJ0.5, paired = FALSE, var.equal = var.equal)
+t.test(OJ2.0-OJ1.0, paired = FALSE, var.equal = var.equal)
+t.test(OJ2.0-OJ0.5, paired = FALSE, var.equal = var.equal)
+
+t.test(VC1.0-VC0.5, paired = FALSE, var.equal = var.equal)
+t.test(VC2.0-VC1.0, paired = FALSE, var.equal = var.equal)
+t.test(VC2.0-VC0.5, paired = FALSE, var.equal = var.equal)
+```
+
+The null hypothesis is refused for all of the case except for OJ2.0 - OJ1.0, which means that over a dose of 1 the difference in tooth growth when the dose is increased is not statistically significant.
+
+We then test the hypothesis that there is a statistical difference between the two supply methods, taking as null hypothesis that OJ performs the same as VC.
+
+```{r Compare OJ and VC, echo=FALSE}
+t.test(len ~ supp, paired = FALSE, var.equal = var.equal, data = df, conf.level = conf.level)
+```
+
+The t test over the two samples fails to reject the null hypothesis. The two methods overall performs the same.  
+
+Let's see in detail by the different doses.
+
+```{r Compare OJ and VC detailed, echo=FALSE}
+t.test(OJ0.5-VC0.5, paired = FALSE, var.equal = var.equal)
+t.test(OJ1.0-VC1.0, paired = FALSE, var.equal = var.equal)
+t.test(OJ2.0-VC2.0, paired = FALSE, var.equal = var.equal)
+```
+
+OJ performs better at smaller doses (0.5 and 1) but for higher doses (2), the difference between the two methods is not statistically significant.
+
+## Conclusions ##
+ Assumptions XXXXXXXXXXXXXXXXX    
+ 
+ Based on the assumptions that we want to maximise the tooth growth and minimise the dose, the method OJ with dose 1 is the best performer.
