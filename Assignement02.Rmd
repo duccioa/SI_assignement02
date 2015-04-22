@@ -79,16 +79,16 @@ We want to first understand if the difference in tooth growth is explained by hi
 We set our null hypothesis that a lower supply gives the same length of a higher one and we test separately the two methods. We calculate the t-interval for each pair of dose, divided by group. 
 
 ```{r Compare doses for different methods}
-t.test(OJ1.0-OJ0.5, paired = FALSE, var.equal = var.equal)
-t.test(OJ2.0-OJ1.0, paired = FALSE, var.equal = var.equal)
-t.test(OJ2.0-OJ0.5, paired = FALSE, var.equal = var.equal)
+t.test(OJ1.0,OJ0.5, paired = FALSE, var.equal = var.equal)
+t.test(OJ2.0,OJ1.0, paired = FALSE, var.equal = var.equal)
+t.test(OJ2.0,OJ0.5, paired = FALSE, var.equal = var.equal)
 
-t.test(VC1.0-VC0.5, paired = FALSE, var.equal = var.equal)
-t.test(VC2.0-VC1.0, paired = FALSE, var.equal = var.equal)
-t.test(VC2.0-VC0.5, paired = FALSE, var.equal = var.equal)
+t.test(VC1.0,VC0.5, paired = FALSE, var.equal = var.equal)
+t.test(VC2.0,VC1.0, paired = FALSE, var.equal = var.equal)
+t.test(VC2.0,VC0.5, paired = FALSE, var.equal = var.equal)
 ```
 
-The null hypothesis that the difference is zero is rejected for all of the cases except for OJ2.0 - OJ1.0, which means that over a dose of 1 the difference in tooth growth when the dose is increased is not statistically significant.
+The null hypothesis that the difference is zero is rejected for all of the cases, meaning that there is a statistically significant correletion between the dose and the tooth growth.
 
 We then test the hypothesis that there is a statistical difference between the two supply methods, taking as null hypothesis that OJ performs the same as VC.
 
@@ -96,22 +96,22 @@ We then test the hypothesis that there is a statistical difference between the t
 t.test(len ~ supp, paired = FALSE, var.equal = var.equal, data = df, conf.level = conf.level)
 ```
 
-The t test over the two samples fails to reject the null hypothesis. The two methods overall performs the same.  
+The t test over the two samples fails to reject the null hypothesis. The two methods overall performs the same, although thw lower bound of the confidence interval is very close to zero, indicating that there might be statistical significancy and that further test with larger samples could be worth doing.  
 
 Let's see in detail by different doses.
 
 ```{r Compare OJ and VC detailed by dose}
-t.test(OJ0.5-VC0.5, paired = FALSE, var.equal = var.equal)
-t.test(OJ1.0-VC1.0, paired = FALSE, var.equal = var.equal)
-t.test(OJ2.0-VC2.0, paired = FALSE, var.equal = var.equal)
+t.test(OJ0.5,VC0.5, paired = FALSE, var.equal = var.equal)
+t.test(OJ1.0,VC1.0, paired = FALSE, var.equal = var.equal)
+t.test(OJ2.0,VC2.0, paired = FALSE, var.equal = var.equal)
 ```
 
-OJ performs better at smaller doses (0.5 and 1) but for higher doses (2), the difference between the two methods is not statistically significant.
+OJ performs better at smaller doses (0.5 and 1), but for higher doses (2) the difference between the two methods is not statistically significant.
 
 ## Conclusions ##
 The hypothesis tests have been conducted under the assumptions that the data distribution is normal and that the variance is not constant amongst the groups.    
- 
- Based on the assumptions that we want to maximise the tooth growth and minimise the dose, the method OJ with dose 1 is the best performer.  
+
+There is a direct correlation between the amount of vitamin C delivered and the tooth growth. Oj is found to perform better then VC at smaller doses, whether OJ and VC permorm the same at higher doses.
  
  ***
  
