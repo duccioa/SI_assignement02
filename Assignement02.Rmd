@@ -72,7 +72,7 @@ VC1.0 <- df[df$supp == "VC" & df$dose == 1, 1]
 VC2.0 <- df[df$supp == "VC" & df$dose == 2, 1]
 
 var.equal <- FALSE
-conf.level <- .95
+conf.level <- .975
 ```
 
 We want to first understand if the difference in tooth growth is explained by higher levels of vitamin C delivered.  
@@ -88,7 +88,7 @@ t.test(VC2.0,VC1.0, paired = FALSE, var.equal = var.equal)
 t.test(VC2.0,VC0.5, paired = FALSE, var.equal = var.equal)
 ```
 
-The null hypothesis that the difference is zero is rejected for all of the cases, meaning that there is a statistically significant correletion between the dose and the tooth growth.
+The null hypothesis that the difference is zero is rejected for all of the cases, meaning that there is a statistically significant correletion between the dose and the tooth growth for both methods of delivery.
 
 We then test the hypothesis that there is a statistical difference between the two supply methods, taking as null hypothesis that OJ performs the same as VC.
 
@@ -98,7 +98,7 @@ t.test(len ~ supp, paired = FALSE, var.equal = var.equal, data = df, conf.level 
 
 The t test over the two samples fails to reject the null hypothesis. The two methods overall performs the same, although thw lower bound of the confidence interval is very close to zero, indicating that there might be statistical significancy and that further test with larger samples could be worth doing.  
 
-Let's see in detail by different doses.
+Let's see in detail the difference between the two methods for each dose.
 
 ```{r Compare OJ and VC detailed by dose}
 t.test(OJ0.5,VC0.5, paired = FALSE, var.equal = var.equal)
@@ -111,7 +111,7 @@ OJ performs better at smaller doses (0.5 and 1), but for higher doses (2) the di
 ## Conclusions ##
 The hypothesis tests have been conducted under the assumptions that the data distribution is normal and that the variance is not constant amongst the groups.    
 
-There is a direct correlation between the amount of vitamin C delivered and the tooth growth. Oj is found to perform better then VC at smaller doses, whether OJ and VC permorm the same at higher doses.
+There is a direct correlation between the amount of vitamin C delivered and the tooth growth. OJ is found to perform better then VC at smaller doses, whether OJ and VC permorm the same at higher doses.
  
  ***
  
@@ -152,25 +152,25 @@ VC1.0 <- df[df$supp == "VC" & df$dose == 1, 1]
 VC2.0 <- df[df$supp == "VC" & df$dose == 2, 1]
 
 var.equal <- FALSE
-conf.level <- .95
+conf.level <- .975
 
 ## Do bigger doses correspond to higher tooth growth ##
 # Method OJ #
-t.test(OJ1.0-OJ0.5, paired = FALSE, var.equal = var.equal)
-t.test(OJ2.0-OJ1.0, paired = FALSE, var.equal = var.equal)
-t.test(OJ2.0-OJ0.5, paired = FALSE, var.equal = var.equal)
+t.test(OJ1.0,OJ0.5, paired = FALSE, var.equal = var.equal)
+t.test(OJ2.0,OJ1.0, paired = FALSE, var.equal = var.equal)
+t.test(OJ2.0,OJ0.5, paired = FALSE, var.equal = var.equal)
 # Method VC #
-t.test(VC1.0-VC0.5, paired = FALSE, var.equal = var.equal)
-t.test(VC2.0-VC1.0, paired = FALSE, var.equal = var.equal)
-t.test(VC2.0-VC0.5, paired = FALSE, var.equal = var.equal)
+t.test(VC1.0,VC0.5, paired = FALSE, var.equal = var.equal)
+t.test(VC2.0,VC1.0, paired = FALSE, var.equal = var.equal)
+t.test(VC2.0,VC0.5, paired = FALSE, var.equal = var.equal)
 
 ## Do OJ and VC perform differently overall? ##
 t.test(len ~ supp, paired = FALSE, var.equal = var.equal, data = df, conf.level = conf.level)
 
 ## Do OJ and VC perform differently by dose? ##
-t.test(OJ0.5-VC0.5, paired = FALSE, var.equal = var.equal)
-t.test(OJ1.0-VC1.0, paired = FALSE, var.equal = var.equal)
-t.test(OJ2.0-VC2.0, paired = FALSE, var.equal = var.equal)
+t.test(OJ0.5,VC0.5, paired = FALSE, var.equal = var.equal)
+t.test(OJ1.0,VC1.0, paired = FALSE, var.equal = var.equal)
+t.test(OJ2.0,VC2.0, paired = FALSE, var.equal = var.equal)
 ```
 
 
